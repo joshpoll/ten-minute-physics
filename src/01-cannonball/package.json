@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "esbuild cannonball-1.ts --bundle --outfile=build/out.js",
+    "watch": "esbuild cannonball-1.ts --bundle --outfile=build/out.js --watch"
+  },
+  "dependencies": {
+    "esbuild": "0.16.7"
+  }
+}
