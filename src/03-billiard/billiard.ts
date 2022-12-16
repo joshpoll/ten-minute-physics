@@ -52,8 +52,7 @@ const ball = {
 };
 
 const physicsScene = {
-  // gravity: { x: 0, y: -9.81 },
-  gravity: { x: 0, y: 0 },
+  gravity: { x: 0, y: -9.81 },
   dt: 1 / 60,
   // TODO: should this really be a vector??
   worldSize: { x: simWidth, y: simHeight },
@@ -63,10 +62,10 @@ const physicsScene = {
 };
 
 function setupScene() {
-  const numBalls = 4;
+  const numBalls = 20;
 
   physicsScene.balls = new Array(numBalls).fill(0).map((_, i) => {
-    const radius = 2 + Math.random() * 0.1;
+    const radius = 0.5 + Math.random() * 0.1;
     const mass = Math.PI * radius * radius;
     const position = {
       x: Math.random() * (simWidth - 2 * radius) + radius,
@@ -98,7 +97,7 @@ function draw() {
   });
 }
 
-function handleBallCollision(ball1, ball2, restitution) {
+function handleBallCollision(ball1: Ball, ball2: Ball, restitution) {
   const dir = sub(ball2.position, ball1.position);
   const d = mag(dir);
   if (d === 0 || d > ball1.radius + ball2.radius) {
@@ -120,8 +119,8 @@ function handleBallCollision(ball1, ball2, restitution) {
   const newV1 = (m1 * v1 + m2 * v2 - m2 * (v1 - v2) * restitution) / (m1 + m2);
   const newV2 = (m1 * v1 + m2 * v2 - m1 * (v2 - v1) * restitution) / (m1 + m2);
 
-  iadd(ball1, smul(newV1 - v1, dir));
-  iadd(ball2, smul(newV2 - v2, dir));
+  iadd(ball1.velocity, smul(newV1 - v1, dir));
+  iadd(ball2.velocity, smul(newV2 - v2, dir));
 }
 
 // TODO: handle restitution?
