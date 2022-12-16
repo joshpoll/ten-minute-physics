@@ -65,7 +65,7 @@ function setupScene() {
   const numBalls = 20;
 
   physicsScene.balls = new Array(numBalls).fill(0).map((_, i) => {
-    const radius = 0.5 + Math.random() * 0.1;
+    const radius = 0.5 + Math.random() * 0.3;
     const mass = Math.PI * radius * radius;
     const position = {
       x: Math.random() * (simWidth - 2 * radius) + radius,
@@ -123,26 +123,25 @@ function handleBallCollision(ball1: Ball, ball2: Ball, restitution) {
   iadd(ball2.velocity, smul(newV2 - v2, dir));
 }
 
-// TODO: handle restitution?
-function handleWallCollision(ball, _restitution) {
+function handleWallCollision(ball: Ball, restitution: number) {
   if (ball.position.y < ball.radius) {
     ball.position.y = ball.radius;
-    ball.velocity.y = -ball.velocity.y;
+    ball.velocity.y = -ball.velocity.y * restitution;
   }
 
   if (ball.position.x < ball.radius) {
     ball.position.x = ball.radius;
-    ball.velocity.x = -ball.velocity.x;
+    ball.velocity.x = -ball.velocity.x * restitution;
   }
 
   if (ball.position.x > simWidth - ball.radius) {
     ball.position.x = simWidth - ball.radius;
-    ball.velocity.x = -ball.velocity.x;
+    ball.velocity.x = -ball.velocity.x * restitution;
   }
 
   if (ball.position.y > simHeight - ball.radius) {
     ball.position.y = simHeight - ball.radius;
-    ball.velocity.y = -ball.velocity.y;
+    ball.velocity.y = -ball.velocity.y * restitution;
   }
 }
 
@@ -161,7 +160,7 @@ function simulate() {
       handleBallCollision(ball, otherBall, physicsScene.restitution);
     });
 
-    handleWallCollision(ball, physicsScene.restitution);
+    handleWallCollision(ball, /* physicsScene.restitution */ 0.99);
   });
 }
 
