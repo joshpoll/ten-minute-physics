@@ -39,9 +39,13 @@ function cY(pos: { x: number; y: number }) {
   return canvasHeight - pos.y * cScale;
 }
 
+const gravity = { x: 0, y: -9.81 };
+const timeStep = 1 / 60;
+
 const ball = {
   radius: 0.2,
   position: { x: 0.2, y: 0.2 },
+  velocity: { x: 10, y: 15 },
 };
 
 function draw() {
@@ -69,7 +73,33 @@ function draw() {
   c.fill();
 }
 
-function simulate() {}
+function simulate() {
+  ball.velocity.x = ball.velocity.x + gravity.x * timeStep;
+  ball.velocity.y = ball.velocity.y + gravity.y * timeStep;
+
+  ball.position.x = ball.position.x + ball.velocity.x * timeStep;
+  ball.position.y = ball.position.y + ball.velocity.y * timeStep;
+
+  if (ball.position.y < ball.radius) {
+    ball.position.y = ball.radius;
+    ball.velocity.y = -ball.velocity.y;
+  }
+
+  if (ball.position.x < ball.radius) {
+    ball.position.x = ball.radius;
+    ball.velocity.x = -ball.velocity.x;
+  }
+
+  if (ball.position.x > simWidth - ball.radius) {
+    ball.position.x = simWidth - ball.radius;
+    ball.velocity.x = -ball.velocity.x;
+  }
+
+  if (ball.position.y > simHeight - ball.radius) {
+    ball.position.y = simHeight - ball.radius;
+    ball.velocity.y = -ball.velocity.y;
+  }
+}
 
 function update() {
   simulate();
@@ -78,3 +108,5 @@ function update() {
 }
 
 update();
+
+export {};
